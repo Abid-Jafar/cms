@@ -1,9 +1,9 @@
 <?php 
 session_start();
-if (isset($_SESSION['admin_id']) && 
+if (isset($_SESSION['teacher_id']) && 
     isset($_SESSION['role'])) {
 
-    if ($_SESSION['role'] == 'Admin') {
+    if ($_SESSION['role'] == 'Teacher') {
        include "../DB_connection.php";
        include "data/student.php";
        include "data/batch.php"; 

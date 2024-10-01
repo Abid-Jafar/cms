@@ -1,95 +1,68 @@
-<?php 
-session_start();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Coaching Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="logo.png">
+</head>
+<body class="body-login">
+    <div class="black-fill"><br /> <br />
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <form class="login" 
+                  method="post"
+                  action="req/login.php">
 
-if (isset($_POST['uname']) &&
-    isset($_POST['pass']) &&
-    isset($_POST['role'])) {
+                <div class="text-center">
+                    <img src="logo.png"
+                         width="100">
+                </div>
+                <h3>LOGIN</h3>
+                <?php if (isset($_GET['error'])) { ?>
+                <div class="alert alert-danger" role="alert">
+                    <?=$_GET['error']?>
+                </div>
+                <?php } ?>
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" 
+                           class="form-control"
+                           name="uname">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" 
+                           class="form-control"
+                           name="pass">
+                </div>
 
-	include "../DB_connection.php";
-	
-	$uname = $_POST['uname'];
-	$pass = $_POST['pass'];
-	$role = $_POST['role'];
+                <div class="mb-3">
+                    <label class="form-label">Login As</label>
+                    <select class="form-control"
+                            name="role">
+                        <option value="1">Admin</option>
+                        <option value="2">Teacher</option>
+                        <option value="3">Student</option>
+                    </select>
+                </div>
 
-	if (empty($uname)) {
-		$em  = "Username is required";
-		header("Location: ../login.php?error=$em");
-		exit;
-	}else if (empty($pass)) {
-		$em  = "Password is required";
-		header("Location: ../login.php?error=$em");
-		exit;
-	}else if (empty($role)) {
-		$em  = "An error Occurred";
-		header("Location: ../login.php?error=$em");
-		exit;
-	}else {
-        
-        if($role == '1'){
-        	$sql = "SELECT * FROM admin 
-        	        WHERE username = ?";
-        	$role = "Admin";
-        }else if($role == '2'){
-        	$sql = "SELECT * FROM teachers 
-        	        WHERE username = ?";
-        	$role = "Teacher";
-        }else if($role == '3'){
-        	$sql = "SELECT * FROM students 
-        	        WHERE username = ?";
-        	$role = "Student";
-        }
-
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$uname]);
-
-        if ($stmt->rowCount() == 1) {
-        	$user = $stmt->fetch();
-        	$username = $user['username'];
-        	$password = $user['password'];
-        	
-            if ($username === $uname) {
-            	if (password_verify($pass, $password)) {
-            		$_SESSION['role'] = $role;
-            		if ($role == 'Admin') {
-                        $id = $user['admin_id'];
-                        $_SESSION['admin_id'] = $id;
-                        header("Location: ../admin/index.php");
-                        exit;
-                    }else if ($role == 'Student') {
-                        $id = $user['student_id'];
-                        $_SESSION['student_id'] = $id;
-                        header("Location: ../Student/index.php");
-                        exit;
-                    }else if($role == 'Teacher'){
-                    	$id = $user['teacher_id'];
-                        $_SESSION['teacher_id'] = $id;
-                        header("Location: ../Teacher/index.php");
-                        exit;
-                    }else {
-                    	$em  = "Incorrect Username or Password";
-				        header("Location: ../login.php?error=$em");
-				        exit;
-                    }
-				    
-            	}else {
-		        	$em  = "Incorrect Username or Password";
-				    header("Location: ../login.php?error=$em");
-				    exit;
-		        }
-            }else {
-	        	$em  = "Incorrect Username or Password";
-			    header("Location: ../login.php?error=$em");
-			    exit;
-	        }
-        }else {
-        	$em  = "Incorrect Username or Password";
-		    header("Location: ../login.php?error=$em");
-		    exit;
-        }
-	}
-
-
-}else{
-	header("Location: ../login.php");
-	exit;
-}
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            
+            <!-- Go Back Button -->
+            <form action="index.html" method="get">
+                <button type="submit" class="btn btn-secondary">Go Back</button>
+            </form>
+            
+            <br /><br />
+            <div class="text-center text-light">
+                Copyright &copy; 2024 Abid Jafar. All rights reserved.
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>    
+</body>
+</html>
